@@ -83,3 +83,6 @@ h2. Quick Example of Sending a Notification Through C2DM
         }
     } while ($tryAgain);
 </code></pre>
+
+h2. Further Reading
+"Checkout my blog on Android C2DM With PHP and Zend Framework":http://blog.digitalstruct.com/2010/11/21/android-c2dm-with-php-and-zend-framework/
