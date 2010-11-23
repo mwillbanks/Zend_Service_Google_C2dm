@@ -4,11 +4,13 @@ This project makes usage of libraries from Zend Framework in order to do the aut
 In order to utilize this functionality you must sign up for a c2dm account: http://code.google.com/android/c2dm/index.html
 
 h2. Quick Example of Sending a Notification Through C2DM
+
+Sorry about the formatting, textile in GitHub really does not like whitespace in the pre-code blocks.
+
 <pre><code>
     define('C2DM_USERNAME', 'myGoogleAccount@gmail.com');
     define('C2DM_PASSWORD', 'myExamplePassword');
     define('C2DM_APPLICATION', 'ExampleApp');
-
     protected function getBackOffTime($fails, Zend_Http_Response $response)
     {
         if ($retry = $response->getHeader('Retry-After')) {
@@ -19,8 +21,6 @@ h2. Quick Example of Sending a Notification Through C2DM
         }
         return intval(pow(2, $fails) - 1);
     }
-
-
     try {
         $client = Zend_GData_ClientLogin::getHttpClient(
             C2DM_USERNAME,
@@ -40,19 +40,16 @@ h2. Quick Example of Sending a Notification Through C2DM
     }
     $c2dm = new Zend_Service_Google_C2dm();
     $c2dm->setLoginToken($client->getClientLoginToken());
-
     $registrationId = 'THE_REGISTRATION_ID_OF_THE_PHONE';
     $collapseKey    = 'aUniqueStackableIdentifier';
     $data = array(
         'key' => 'value-pairs'
     );
-
     $message = new Zend_Service_Google_C2dm_Message(
         $registrationId,
         $collapseKey,
         $data
     );
-
     $failCount = 0;
     do {
         $tryAgain = false;
@@ -85,4 +82,5 @@ h2. Quick Example of Sending a Notification Through C2DM
 </code></pre>
 
 h2. Further Reading
+
 "Checkout my blog on Android C2DM With PHP and Zend Framework":http://blog.digitalstruct.com/2010/11/21/android-c2dm-with-php-and-zend-framework/
