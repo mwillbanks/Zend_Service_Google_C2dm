@@ -5,81 +5,81 @@ In order to utilize this functionality you must sign up for a c2dm account: http
 
 h2. Quick Example of Sending a Notification Through C2DM
 <pre><code>
-define('C2DM_USERNAME', 'myGoogleAccount@gmail.com');
-define('C2DM_PASSWORD', 'myExamplePassword');
-define('C2DM_APPLICATION', 'ExampleApp');
+    define('C2DM_USERNAME', 'myGoogleAccount@gmail.com');
+    define('C2DM_PASSWORD', 'myExamplePassword');
+    define('C2DM_APPLICATION', 'ExampleApp');
 
-protected function getBackOffTime($fails, Zend_Http_Response $response)
-{
-    if ($retry = $response->getHeader('Retry-After')) {
-        if (is_string($retry)) {
-            $retry = strtotime($retry) - time();
+    protected function getBackOffTime($fails, Zend_Http_Response $response)
+    {
+        if ($retry = $response->getHeader('Retry-After')) {
+            if (is_string($retry)) {
+                $retry = strtotime($retry) - time();
+        }
+        return (int) $retry;
+        }
+        return intval(pow(2, $fails) - 1);
     }
-    return (int) $retry;
-    }
-    return intval(pow(2, $fails) - 1);
-}
 
 
-try {
-    $client = Zend_GData_ClientLogin::getHttpClient(
-        C2DM_USERNAME,
-        C2DM_PASSWORD,
-        Zend_Service_Google_C2dm::AUTH_SERVICE_NAME,
-        null,
-        C2DM_APPLICATION
-    );
-} catch (Zend_Gdata_App_CaptchaRequiredException $cre) {
-    // manual login is required
-    echo 'URL of CAPTCHA image: ' . $cre->getCaptchaUrl() . PHP_EOL;
-    echo 'Token ID: ' . $cre->getCaptchaToken() . PHP_EOL;
-    exit(1);
-} catch (Zend_Gdata_App_AuthException $ae) {
-    echo 'Problem authenticating: ' . $ae->exception() . PHP_EOL;
-    exit(1);
-}
-$c2dm = new Zend_Service_Google_C2dm();
-$c2dm->setLoginToken($client->getClientLoginToken());
-
-$registrationId = 'THE_REGISTRATION_ID_OF_THE_PHONE';
-$collapseKey    = 'aUniqueStackableIdentifier';
-$data = array(
-    'key' => 'value-pairs'
-);
-
-$message = new Zend_Service_Google_C2dm_Message(
-    $registrationId,
-    $collapseKey,
-    $data
-);
-
-$failCount = 0;
-do {
-    $tryAgain = false;
     try {
-        $c2dm->sendMessage($message);
-    } catch (Zend_Service_Google_C2dm_Exception_QuotaExceeded $e) {
-        $failCount++;
-        $tryAgain = true;
-        usleep(getBackOffTime($failCount, $c2dm->getLastResponse()) * 1000);
-    } catch (Zend_Service_Google_C2dm_Exception_ServerUnavailable $e) {
-        $failCount++;
-        $tryAgain = true;
-        usleep(getBackOffTime($failCount, $c2dm->getLastResponse()) * 1000);
-    } catch (Zend_Service_Google_C2dm_Exception_InvalidRegistration $e) {
-        // do not attempt to send a message to this id again
-    } catch (Zend_Service_Google_C2dm_Exception_NotRegistered $e) {
-        // do not attempt to send a message to this id again
-    } catch (Zend_Service_Google_C2dm_Exception_DeviceQuotaExceeded $e) {
-        // you may attempt to retry, however, it may be best to let it go away
-    } catch (Zend_Service_Google_C2dm_Exception_MessageTooBig $e) {
-        // you may want to log this one and find the offending code and reduce the message size
-    } catch (Zend_Service_Google_C2dm_Exception_MissingCollapseKey $e) {
-        // you may want to log this one and find the offending code to ensure that this is pushed in
-    } catch (Zend_Service_Google_C2dm_Exception $e) {
-        // all of the rest of the exceptions are fatal in nature, log the exception and kill the client
-        // sometimes we simply just need to generate a new auth token.
+        $client = Zend_GData_ClientLogin::getHttpClient(
+            C2DM_USERNAME,
+            C2DM_PASSWORD,
+            Zend_Service_Google_C2dm::AUTH_SERVICE_NAME,
+            null,
+            C2DM_APPLICATION
+        );
+    } catch (Zend_Gdata_App_CaptchaRequiredException $cre) {
+        // manual login is required
+        echo 'URL of CAPTCHA image: ' . $cre->getCaptchaUrl() . PHP_EOL;
+        echo 'Token ID: ' . $cre->getCaptchaToken() . PHP_EOL;
+        exit(1);
+    } catch (Zend_Gdata_App_AuthException $ae) {
+        echo 'Problem authenticating: ' . $ae->exception() . PHP_EOL;
         exit(1);
     }
-} while ($tryAgain);
+    $c2dm = new Zend_Service_Google_C2dm();
+    $c2dm->setLoginToken($client->getClientLoginToken());
+
+    $registrationId = 'THE_REGISTRATION_ID_OF_THE_PHONE';
+    $collapseKey    = 'aUniqueStackableIdentifier';
+    $data = array(
+        'key' => 'value-pairs'
+    );
+
+    $message = new Zend_Service_Google_C2dm_Message(
+        $registrationId,
+        $collapseKey,
+        $data
+    );
+
+    $failCount = 0;
+    do {
+        $tryAgain = false;
+        try {
+            $c2dm->sendMessage($message);
+        } catch (Zend_Service_Google_C2dm_Exception_QuotaExceeded $e) {
+            $failCount++;
+            $tryAgain = true;
+            usleep(getBackOffTime($failCount, $c2dm->getLastResponse()) * 1000);
+        } catch (Zend_Service_Google_C2dm_Exception_ServerUnavailable $e) {
+            $failCount++;
+            $tryAgain = true;
+            usleep(getBackOffTime($failCount, $c2dm->getLastResponse()) * 1000);
+        } catch (Zend_Service_Google_C2dm_Exception_InvalidRegistration $e) {
+            // do not attempt to send a message to this id again
+        } catch (Zend_Service_Google_C2dm_Exception_NotRegistered $e) {
+            // do not attempt to send a message to this id again
+        } catch (Zend_Service_Google_C2dm_Exception_DeviceQuotaExceeded $e) {
+            // you may attempt to retry, however, it may be best to let it go away
+        } catch (Zend_Service_Google_C2dm_Exception_MessageTooBig $e) {
+            // you may want to log this one and find the offending code and reduce the message size
+        } catch (Zend_Service_Google_C2dm_Exception_MissingCollapseKey $e) {
+            // you may want to log this one and find the offending code to ensure that this is pushed in
+        } catch (Zend_Service_Google_C2dm_Exception $e) {
+            // all of the rest of the exceptions are fatal in nature, log the exception and kill the client
+            // sometimes we simply just need to generate a new auth token.
+            exit(1);
+        }
+    } while ($tryAgain);
 </code></pre>
