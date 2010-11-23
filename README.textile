@@ -9,13 +9,6 @@ define('C2DM_USERNAME', 'myGoogleAccount@gmail.com');
 define('C2DM_PASSWORD', 'myExamplePassword');
 define('C2DM_APPLICATION', 'ExampleApp');
 
-/**
- * Exponential Backoff / Retry-After
- *
- * @param int $fails
- * @param Zend_Http_Response
- * @return int
- */
 protected function getBackOffTime($fails, Zend_Http_Response $response)
 {
     if ($retry = $response->getHeader('Retry-After')) {
