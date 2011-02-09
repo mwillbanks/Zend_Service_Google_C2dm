@@ -246,7 +246,7 @@ class Zend_Service_Google_C2dm
                 }
                 if (strtolower($body[0]) == 'error') {
                     $exception = "Zend_Service_Google_C2dm_Exception_{$body[1]}";
-                    require_once str_replace('_', '/', $exception);
+                    require_once str_replace('_', '/', $exception) . '.php';
                     throw new $exception();
                 }
         }
