@@ -109,6 +109,7 @@ class Zend_Service_Google_C2dm_Message
     public function setCollapseKey($collapseKey)
     {
         if (!is_string($collapseKey)) {
+            require_once 'Zend/Service/Google/C2dm/Exception.php';
             throw new Zend_Service_Google_C2dm_Exception('setCollapseKey() requires a string for collapseKey');
         }
         $this->_collapseKey = $collapseKey;
