@@ -7,7 +7,7 @@ h2. Quick Example of Sending a Notification Through C2DM
 
 Sorry about the formatting, textile in GitHub really does not like whitespace in the pre-code blocks.
 
-<code>
+bc.. <?php
     define('C2DM_USERNAME', 'myGoogleAccount@gmail.com');
     define('C2DM_PASSWORD', 'myExamplePassword');
     define('C2DM_APPLICATION', 'ExampleApp');
@@ -84,7 +84,6 @@ Sorry about the formatting, textile in GitHub really does not like whitespace in
             exit(1);
         }
     } while ($tryAgain);
-</code>
 
 h2. Further Reading
 
