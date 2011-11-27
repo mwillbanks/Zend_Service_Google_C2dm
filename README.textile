@@ -1,3 +1,12 @@
+h1. Deprecated
+
+I am deprecating this project as I am working on a ZF 1.x style Push
+Notification server.  This is actually shaping up in a separate repository and
+handles everything that this current C2DM implementation does as well.
+
+See Zend_Mobile:"https://github.com/mwillbanks/Zend_Mobile" which I am working
+for ZF 1.12 during the proposal process.
+
 h1. Implementing C2DM Push Notifications for Google Android
 
 This project makes usage of libraries from Zend Framework in order to do the authentication for Google.  Each response from the Google C2DM Service is encapsulated.
